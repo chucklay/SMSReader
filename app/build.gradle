@@ -1,21 +1,31 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        Signature {
+            keyAlias 'SMSReader'
+            keyPassword '8jMrA8hkr4TXy69tP7ajunpS'
+            storeFile file('D:/Code/Android/AndroidKeystore.jks')
+            storePassword '8jMrA8hkr4TXy69tP7ajunpS'
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
     defaultConfig {
         applicationId "com.claymon.android.smsreader"
         minSdkVersion 8
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        signingConfig signingConfigs.Signature
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
