@@ -54,7 +54,12 @@ public class Reader implements TextToSpeech.OnInitListener {
     }
 
     public void pause(int time_wait){
-        tts.playSilentUtterance(time_wait, TextToSpeech.QUEUE_ADD, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
+        if(Build.VERSION.SDK_INT >= 21) {
+            tts.playSilentUtterance(time_wait, TextToSpeech.QUEUE_ADD, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
+        }
+        else{
+            tts.playSilence(time_wait, TextToSpeech.QUEUE_ADD, null);
+        }
     }
 
     public void destroy(){
