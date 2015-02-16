@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SMSReader</string>
+    <string name="action_settings">Settings</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="enable_message">SMS reading enabled.</string>
+    <string name="disable_message">SMS reading disabled.</string>
+
+</resources>
