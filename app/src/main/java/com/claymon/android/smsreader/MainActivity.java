@@ -1,5 +1,6 @@
 package com.claymon.android.smsreader;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsMessage;
 import android.view.Menu;
@@ -29,6 +31,8 @@ public class MainActivity extends ActionBarActivity {
     private ToggleButton button;
     private CompoundButton.OnCheckedChangeListener toggleListener;
 
+    private PendingIntent mPIntent;
+
     private BroadcastReceiver smsReceiver;
 
     @Override
@@ -38,6 +42,13 @@ public class MainActivity extends ActionBarActivity {
 
         button = (ToggleButton) findViewById(R.id.reader_toggle);
 
+        mPIntent = new Intent(Intent.ACTION_MAIN);
+
+        NotificationCompat.Builder mNotification = new NotificationCompat.Builder(this)
+                .setContentTitle("SMSReader")
+                .setContentText("Enabled")
+                .setSmallIcon(R.drawable.icon)
+                .addAction(R.drawable.icon, "Disable", mPIntent);
         toggleListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
