@@ -1,5 +1,6 @@
 package com.claymon.android.smsreader;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,12 +27,11 @@ public class MainActivity extends ActionBarActivity {
     private final int CHECK_CODE = 0x1;
     private final int LONG_DURATION = 5000;
     private final int SHORT_DURATION = 1200;
+    private final int notificationID = 001;
 
     private Reader reader;
     private ToggleButton button;
     private CompoundButton.OnCheckedChangeListener toggleListener;
-
-    private PendingIntent mPIntent;
 
     private BroadcastReceiver smsReceiver;
 
@@ -42,23 +42,30 @@ public class MainActivity extends ActionBarActivity {
 
         button = (ToggleButton) findViewById(R.id.reader_toggle);
 
-        mPIntent = new Intent(Intent.ACTION_MAIN);
+        Intent mCloseIntent = new Intent(Intent.ACTION_MAIN);
 
-        NotificationCompat.Builder mNotification = new NotificationCompat.Builder(this)
+        PendingIntent mNotificationCloser =
+                PendingIntent.getActivity(this, 0, mCloseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        final NotificationCompat.Builder mNotification = new NotificationCompat.Builder(this)
                 .setContentTitle("SMSReader")
                 .setContentText("Enabled")
                 .setSmallIcon(R.drawable.icon)
-                .addAction(R.drawable.icon, "Disable", mPIntent);
+                .addAction(R.drawable.icon, "Disable", mNotificationCloser);
         toggleListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                NotificationManager mNotManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 if(isChecked){
                     reader.setAllowed(true);
                     reader.read(getString(R.string.enable_message));
+                    mNotManager.notify(notificationID, mNotification.build());
                 }
                 else{
                     reader.read(getString(R.string.disable_message));
                     reader.setAllowed(false);
+                    mNotManager.cancel(notificationID);
                 }
             }
         };
@@ -160,6 +167,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onDestroy(){
         super.onDestroy();
         unregisterReceiver(smsReceiver);
+        NotificationManager mNotManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotManager.cancel(notificationID);
         reader.destroy();
     }
 }
